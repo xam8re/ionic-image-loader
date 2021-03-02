@@ -1,10 +1,11 @@
-import { HttpClient }             from '@angular/common/http';
-import { Injectable }             from '@angular/core';
-import { File, FileEntry }        from '@ionic-native/file';
-import { Platform }               from 'ionic-angular';
-import { fromEvent }              from 'rxjs/observable/fromEvent';
-import { first }                   from 'rxjs/operators';
-import { ImageLoaderConfig }       from './image-loader-config';
+import { Platform } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import { first } from 'rxjs/operators';
+import { ImageLoaderConfig } from './image-loader-config';
+
+import * as IonFile from "@ionic-native/file"
 
 interface IndexItem {
   name: string;
@@ -55,7 +56,7 @@ export class ImageLoader {
 
   constructor(
     private config: ImageLoaderConfig,
-    private file: File,
+    private file: IonFile.FileOriginal,
     private http: HttpClient,
     private platform: Platform,
   ) {
@@ -85,7 +86,7 @@ export class ImageLoader {
   }
 
   get nativeAvailable(): boolean {
-    return File.installed();
+    return IonFile.FileOriginal.installed();
   }
 
   private get isCacheSpaceExceeded(): boolean {
@@ -163,8 +164,8 @@ export class ImageLoader {
               .then(() => {
                 this.initCache(true);
               }).catch(err => {
-              // Handle error?
-            });
+                // Handle error?
+              });
           } else {
             this.initCache(true);
           }
@@ -321,7 +322,7 @@ export class ImageLoader {
     };
 
     if (this.currentlyProcessing[currentItem.imageUrl] === undefined) {
-      this.currentlyProcessing[currentItem.imageUrl] = new Promise((resolve, reject) => {
+      this.currentlyProcessing[currentItem.imageUrl] = new Promise<void>((resolve, reject) => {
         // process more items concurrently if we can
         if (this.canProcess) { this.processQueue(); }
 
@@ -333,7 +334,7 @@ export class ImageLoader {
           headers: this.config.httpHeaders
         }).subscribe(
           (data: Blob) => {
-            this.file.writeFile(localDir, fileName, data, {replace: true}).then((file: FileEntry) => {
+            this.file.writeFile(localDir, fileName, data, { replace: true }).then((file: IonFile.FileEntry) => {
               if (this.isCacheSpaceExceeded) {
                 this.maintainCacheSize();
               }
@@ -356,7 +357,7 @@ export class ImageLoader {
             error(e);
             reject(e);
           });
-        }
+      }
       ).catch((e) => this.throwError(e));
     } else {
       // Prevented same Image from loading at the same time
@@ -366,9 +367,9 @@ export class ImageLoader {
         });
         done();
       },
-      (e) => {
-        error(e);
-      });
+        (e) => {
+          error(e);
+        });
     }
   }
 
@@ -407,7 +408,7 @@ export class ImageLoader {
    * @param {FileEntry} file File to index
    * @returns {Promise<any>}
    */
-  private addFileToIndex(file: FileEntry): Promise<any> {
+  private addFileToIndex(file: IonFile.FileEntry): Promise<any> {
     return new Promise<any>((resolve, reject) =>
       file.getMetadata(resolve, reject),
     ).then(metadata => {
@@ -539,7 +540,7 @@ export class ImageLoader {
       // check if exists
       this.file
         .resolveLocalFilesystemUrl(dirPath + '/' + fileName)
-        .then((fileEntry: FileEntry) => {
+        .then((fileEntry: IonFile.FileEntry) => {
           // file exists in cache
 
           if (this.config.imageReturnType === 'base64') {
@@ -564,7 +565,7 @@ export class ImageLoader {
               // check if file already exists in temp directory
               this.file
                 .resolveLocalFilesystemUrl(tempDirPath + '/' + fileName)
-                .then((tempFileEntry: FileEntry) => {
+                .then((tempFileEntry: IonFile.FileEntry) => {
                   // file exists in temp directory
                   // return native path
                   resolve(Ionic.WebView.convertFileSrc(tempFileEntry.nativeURL));
@@ -574,7 +575,7 @@ export class ImageLoader {
                   // copy it!
                   this.file
                     .copyFile(dirPath, fileName, tempDirPath, fileName)
-                    .then((tempFileEntry: FileEntry) => {
+                    .then((tempFileEntry: IonFile.FileEntry) => {
                       // now the file exists in the temp directory
                       // return native path
                       resolve(Ionic.WebView.convertFileSrc(tempFileEntry.nativeURL));

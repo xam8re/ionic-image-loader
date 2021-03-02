@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es2015",
+    "module": "esnext",
     "target": "es5",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -12,7 +12,11 @@
       "es2015"
     ],
     "outDir": "dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "allowSyntheticDefaultImports":true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
   },
   "exclude": [
     "node_modules",
