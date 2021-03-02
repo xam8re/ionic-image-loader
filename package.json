@@ -15,7 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/zyra/ionic-image-loader.git"
+        "url": "git+https://github.com/xam8re/ionic-image-loader.git"
     },
     "keywords": [
         "ionic5",
@@ -27,9 +27,9 @@
     "author": "MaxICT",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/zyra/ionic-image-loader/issues"
+        "url": "https://github.com/xam8re/ionic-image-loader/issues"
     },
-    "homepage": "https://github.com/zyra/ionic-image-loader#readme",
+    "homepage": "https://github.com/xam8re/ionic-image-loader#readme",
     "devDependencies": {
         "@angular/common": "8.2.1",
         "@angular/compiler": "8.2.1",
