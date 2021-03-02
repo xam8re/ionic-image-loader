@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Injectable }  from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ImageLoaderConfig {
@@ -41,7 +41,7 @@ export class ImageLoaderConfig {
 
   fallbackFileNameCachedExtension = '.jpg';
 
-  cacheDirectoryType: 'cache'|'data' = 'cache';
+  cacheDirectoryType: 'cache' | 'data' = 'cache';
 
   private _cacheDirectoryName: string = 'image-loader-cache';
 
